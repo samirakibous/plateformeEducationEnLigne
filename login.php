@@ -1,4 +1,8 @@
 <?php
+require 'db.php';
+session_start();
+
+require_once 'User.php';
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];

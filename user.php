@@ -9,7 +9,6 @@ class User extends Db
         parent::__construct();
     }
 
-    // Méthode d'inscription
     public function register($nom, $email, $password,$role)
     {
         // Vérifier si l'email existe déjà
@@ -35,15 +34,16 @@ class User extends Db
             } else {
                 $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, :role)";
             }
-
-            // Préparer et exécuter la requête d'insertion
             $stmt3 = $this->conn->prepare($insertQuery);
             $stmt3->execute([
-                'nom' => $nom,
-                'password' => $hashed_password,
-                'email' => $email,
-                'role'=>$role
+                ':nom' => $nom,
+                ':password' => $hashed_password,
+                ':email' => $email,
+                ':role'=>$role
             ]);
+            $id = $this->conn->lastInsertId();
+            $_SESSION['id']=$id;
+            $_SESSION['role']=$role;
 
             // Vérifier si l'insertion a été réussie
             if ($stmt3->rowCount() > 0) {
@@ -69,33 +69,30 @@ class User extends Db
 
 
 
-    public function Login($userD){
-        try{
-            $result=$this->conn->prepare("SELECT * FROM utilisateurs WHERE email=?");
-            $result->execute([$userD[0]]);
-            $user=$result->fetch(PDO::FETCH_ASSOC);
+    public function Login($email, $password)
+{
+    try {
+        $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if($user && password_verify($userD[1],$user["password"])){
-                $checkAdmin = "SELECT * FROM utilisateurs ORDER BY id ASC LIMIT 1";
-                $adminResult = $this->conn->query($checkAdmin);
-                $admin = $adminResult->fetch(PDO::FETCH_ASSOC);
-                
-                if ($user['email'] === $admin['email']) {   
-                    $_SESSION['is_admin'] = true;
-                } else {
-                    $_SESSION['is_admin'] = false;
-                }
+        if ($user && password_verify($password, $user['password'])) {
+            session_start();
 
-                return $user;
-            } else {
-                return false;
-            }
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['nom'] = $user['nom'];
+
+            header('Location: index.php');
+            exit();
+        } else {
+            return "Identifiants incorrects.";
         }
-        catch(PDOException $e){
-            echo"Error:".$e->getMessage();
-            return false;
-        }
+    } catch (PDOException $e) {
+        return "Erreur : " . $e->getMessage();
     }
+}
+
 
     function logout(){
         session_start();
