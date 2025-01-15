@@ -10,6 +10,13 @@ if (isset($_SESSION['role'])) {
 }   
 $demande = new Demande();
 $demandes = $demande->getDemandes();
+
+if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
+    $demande->accepterDemande($_POST['id']); 
+} elseif (isset($_POST['action']) && $_POST['action'] === 'refuser') {
+    $demande->deleteDemande($_POST['id']); 
+}  
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -31,7 +38,7 @@ $demandes = $demande->getDemandes();
                     <th class="border border-gray-300 px-4 py-2">ID</th>
                     <th class="border border-gray-300 px-4 py-2">Nom</th>
                     <th class="border border-gray-300 px-4 py-2">Email</th>
-                    <th class="border border-gray-300 px-4 py-2">Message</th>
+                    <th class="border border-gray-300 px-4 py-2">Role</th>
                     <th class="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
             </thead>
