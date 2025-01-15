@@ -24,7 +24,10 @@ $categories = $categorie->getAllCategories();
     <!-- header -->
     <?php require_once 'header.php' ?>
     <button id="openForm" class="text-black p-5 rounded  float-right m-5 bg-[#E3A008]">add cours</button>
-    <form id="addCours" action="ajouter_cours.php" method="POST" enctype="multipart/form-data" class="hidden max-w-lg mx-auto bg-white p-6 shadow-md rounded-md">
+    <div id="addCours" class="fixed hidden inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Ajouter un Livre</h1>
+    <form  action="ajouter_cours.php" method="POST" enctype="multipart/form-data" class="">
         <div class="mb-4">
             <label for="titre" class="block text-gray-700 font-bold mb-2">Titre du cours :</label>
             <input type="text" id="titre" name="titre" class="w-full border border-gray-300 rounded-md p-2" required>
@@ -67,6 +70,8 @@ $categories = $categorie->getAllCategories();
             </button>
         </div>
     </form>
+      </div>
+    </div>
 <script>
     const addCours= document.getElementById('addCours');
     const openForm= document.getElementById('openForm');

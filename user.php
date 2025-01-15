@@ -29,10 +29,19 @@ class User extends Db
             return false;
         } else {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+            if ($role === 'enseignant') {
+                if ($this->demandes($role, $nom, $email, $hashed_password)) {
+                    $_SESSION['success'] = "Votre demande a été envoyée pour validation.";
+                    return true;
+                } else {
+                    $_SESSION['signup_error'] = "Erreur : Impossible d'envoyer votre demande. Veuillez réessayer.";
+                    return false;
+                }
+            }
             if ($this->isFirstUser()) {
                 $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, 'Admin')";
             } else {
-                $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, :role)";
+                $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, 'etudiant'";
             }
             $stmt3 = $this->conn->prepare($insertQuery);
             $stmt3->execute([
@@ -65,7 +74,20 @@ class User extends Db
 
         return $stmt->rowCount() == 0; // Si aucun utilisateur n'existe, c'est le premier utilisateur
     }
+public function demandes($role, $nom, $email, $password){
+    if($role == 'enseignant'){
+        $query = "INSERT INTO demandes (nom, email, password, role) VALUES (:nom, :email, :password, :role)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([
+            ':nom' => $nom,
+            ':email' => $email,
+            ':password' => $password,
+            ':role' => $role
+        ]);
+    
+    }
 
+}
 
 
 
