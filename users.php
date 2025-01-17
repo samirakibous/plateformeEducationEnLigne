@@ -11,13 +11,8 @@ if (isset($_SESSION['role'])) {
 $user = new User();
 $users = $user->getAllUsers();
 
-if (isset($_POST['action']) && $_POST['action'] === 'supprimer') {
-    $user->deleteUser($_POST['id']);
-}
 
-if (isset($_POST['action']) && $_POST['action'] === 'suspender') {
-    $user->suspendUser($_POST['id']);
-}
+
 
 ?>
 <?php if ($role === 'admin') { ?>
@@ -61,34 +56,25 @@ if (isset($_POST['action']) && $_POST['action'] === 'suspender') {
                             <td class="border border-gray-300 px-4 py-2"><?= $user['date_inscription'] ?></td>
                             <td class="border border-gray-300 px-4 py-2">
                                 <div class="flex space-x-2">
-                                    <form action="users.php" method="POST">
+                                    <form action="userActions/supprimer.php" method="POST">
                                         <input type="hidden" name="id" value="<?= $user['id'] ?>">
                                         <input type="hidden" name="action" value="supprimer">
                                         <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">supprimer</button>
                                     </form>
-                                    <form action="users.php" method="POST">
-                                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                                        <input type="hidden" name="action" value="suspender">
-                                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition">suspender</button>
-                                    </form>
-                                    <?php
-                                    if ($user['status'] === 'active') {
-                                        echo "<form method='POST' action='users.php'>
-                                        <input type='hidden' name='id' value='{$user['id']}'>
-                                        <input type='hidden' name='new_status' value='desactiver'>
-                                        <button type='submit' name='update_status' class='bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition'>Desactiver</button>
-                                    </form>";
-                                    }
-
-                                    if ($user['status'] === 'desactiver'
-                                        || $user['status'] === 'suspended') {
-                                        echo "<form method='POST' action='users.php'>
-                                    <input type='hidden' name='id' value='{$user['id']}'>
-                                    <input type='hidden' name='new_status' value='active'>
-                                    <button type='submit' name='update_status' class='bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition'>Activer</button>
-                                </form>";
-                                    }
-                                    ?>
+                                    <?php if ($user['status'] === 'active'): ?>
+                                        <form action="userActions/suspend.php" method="POST">
+                                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                            <input type="hidden" name="action" value="suspender">
+                                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">suspender</button>
+                                        </form>
+                                    <?php else: ?>
+                                        <form action="userActions/activate.php" method="POST">
+                                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                                            <input type="hidden" name="action" value="activer">
+                                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">activer</button>
+                                        </form>
+                                    <?php endif; ?>
+                                  
 
                                 </div>
                             </td>

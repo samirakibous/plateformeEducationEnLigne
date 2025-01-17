@@ -6,6 +6,10 @@
                 <ul class="flex gap-x-5">
                     <li><a href="index.php" class="text-black hover:underline">Home</a></li>
                     <li><a href="MesCours.php" class="text-black hover:underline">Mes cours</a></li>
+                    <form action="headerController.php" method="POST"><input type="hidden" name="action" value="logout">
+                    <button type="submit" class="bg-black text-[#E3A008] px-4 py-2 rounded-lg hover:bg-gray-200 transition">Deconnexion
+                    </button>
+                </form>
                 </ul>
             <?php elseif ($role === 'visiteur'): ?>
                 <div class="flex gap-x-5">
@@ -20,6 +24,12 @@
                 <ul class="flex gap-x-5">
                     <li><a href="demandes.php" class="text-black hover:underline">demandes</a></li>
                     <li><a href="users.php" class="text-black hover:underline">users</a></li>
+                    <li><a href="categories.php" class="text-black hover:underline">categories</a></li>
+                    <li><a href="tags.php" class="text-black hover:underline">tags</a></li>
+                    <form action="headerController.php" method="POST"><input type="hidden" name="action" value="logout">
+                    <button type="submit" class="bg-black text-[#E3A008] px-4 py-2 rounded-lg hover:bg-gray-200 transition">Deconnexion
+                    </button>
+                </form>
                 </ul>
             <?php endif; ?>
         </div>

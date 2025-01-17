@@ -2,13 +2,12 @@
 require_once 'db.php';
 require_once 'categories.php';
 require_once 'cours.php';
-session_start();
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
 } else {
     $role = 'visiteur';
 }
-$categorie = new Categories();
+$categorie = new Categorie();
 $categories = $categorie->getAllCategories();
 ?>
 <?php if($role=== 'enseignant') { 
