@@ -20,7 +20,10 @@ class Categorie extends Db
     }
 
     public function deleteCategorie($id){
-        $sql = "DELETE FROM categories WHERE id = ";
+        $sql = "DELETE FROM categories WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
     }
     
 }

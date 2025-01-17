@@ -9,6 +9,12 @@ if (isset($_SESSION['role'])) {
 }
 $categorie = new Categorie();
 $categorie->getAllCategories();
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categorie_id'])) {
+    $categorieId = $_POST['categorie_id'];
+    $result = $categorie->deleteCategorie($categorieId);
+
+}
+
 ?>
 <!DOCTYPE html>
 <?php if($role=== 'admin') { ?>
@@ -59,7 +65,8 @@ $categorie->getAllCategories();
             foreach ($categories as $categorie) {
                 echo '<div class="bg-white shadow-lg rounded-lg p-6">';
                 echo '<h2 class="text-lg font-bold text-gray-800">' . $categorie['name'] . '</h2>';
-                echo '
+                echo '<form action="categories.php" method = "POST">
+                <input type="hidden" name="categorie_id" value="' . $categorie['id'] . '">
                 <button class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right ">Supprimer</button>';
                 echo '</div>';
             }

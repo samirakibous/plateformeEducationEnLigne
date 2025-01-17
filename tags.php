@@ -11,9 +11,6 @@ if (isset($_SESSION['role'])) {
 $user = new User();
 $users = $user->getAllUsers();
 
-
-
-
 ?>
 <?php if ($role === 'admin') { ?>
 <!DOCTYPE html>
