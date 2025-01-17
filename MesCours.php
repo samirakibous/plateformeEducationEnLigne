@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 require_once 'categories.php';
+require_once 'cours.php';
 session_start();
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
@@ -10,6 +11,8 @@ if (isset($_SESSION['role'])) {
 $categorie = new Categories();
 $categories = $categorie->getAllCategories();
 ?>
+<?php if($role=== 'enseignant') { 
+    ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -23,7 +26,29 @@ $categories = $categorie->getAllCategories();
 <body class="bg-gray-100">
     <!-- header -->
     <?php require_once 'header.php' ?>
+
+    <div classs= "container mx-auto px-4 mt-8"></div>
     <button id="openForm" class="text-black p-5 rounded  float-right m-5 bg-[#E3A008]">add cours</button>
+
+    <!---afficher les cours--->
+    <div class="container mx-auto px-4 mt-8">
+        <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Mes Cours</h1>
+        <div class="grid grid-cols-3 gap-4">
+            <?php
+            $id = $_SESSION['user_id'];
+            $cours = new Cours();
+            $cours = $cours->getEnseignantCours($id);
+            foreach ($cours as $cours) {
+                echo '<div class="bg-white shadow-lg rounded-lg p-6">';
+                echo '<h2 class="text-lg font-bold text-gray-800">' . $cours['titre'] . '</h2>';
+                echo '<p class="text-gray-600">' . $cours['description'] . '</p>';
+                echo '<p class="text-gray-600">' . $cours['contenu'] . '</p>';
+                echo '<button class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right ">Voir le cours</button>';
+                echo '</div>';
+            }
+            ?>
+        </div>
+    
     <div id="addCours" class="fixed hidden inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
         <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Ajouter un Livre</h1>
@@ -89,3 +114,6 @@ $categories = $categorie->getAllCategories();
 </body>
 
 </html>
+<?php }  else{
+    header('location: erreure.php');
+}?>

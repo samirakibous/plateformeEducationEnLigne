@@ -1,7 +1,6 @@
 <?php
 require_once 'db.php';
 require_once 'demande.php';
-
 class User extends Db
 {
     // Constructeur qui appelle le constructeur parent de la classe Database
@@ -111,6 +110,33 @@ class User extends Db
     }
 
     function getUsername(){
-        return $_SESSION['username'];
+        return $_SESSION['nom'];
     }
+function getAllUsers(){
+    $stmt = $this->conn->prepare("SELECT * FROM utilisateurs");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+function getUserById($id){
+    $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);  
+
+}
+function deleteUser($id){
+    $stmt = $this->conn->prepare("DELETE FROM utilisateurs WHERE id = :id");
+    $stmt->execute(['id' => $id]); 
+}
+function suspendUser($id){
+    $stmt = $this->conn->prepare("UPDATE utilisateurs SET status = 'suspended' WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+}
+function activateUser($id){
+    $stmt = $this->conn->prepare("UPDATE utilisateurs SET status = 'active' WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+}
+function desactiverUser($id){
+    $stmt = $this->conn->prepare("UPDATE utilisateurs SET status = 'desactiver' WHERE id = :id");
+    $stmt->execute(['id' => $id]);
+}
 }

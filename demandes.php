@@ -18,6 +18,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
 }  
 
 ?>
+<?php if($role=== 'admin') { ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -30,6 +31,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
 
 <body class="bg-gray-100">    
     <?php require_once 'header.php' ?>
+    
     <section class="container mx-auto px-4 mt-8">
         <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Demandes</h1>
         <table class="w-full border-collapse border border-gray-300">
@@ -70,3 +72,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
     </section>
 </body>
 </html>
+<?php 
+} else {
+    echo "Vous n'avez pas accès à cette page.";
+} 
+?>
+
+ 

@@ -19,7 +19,7 @@
             <?php elseif ($role === 'admin'): ?>
                 <ul class="flex gap-x-5">
                     <li><a href="demandes.php" class="text-black hover:underline">demandes</a></li>
-                    <li><a href="MesCours.php" class="text-black hover:underline">users</a></li>
+                    <li><a href="users.php" class="text-black hover:underline">users</a></li>
                 </ul>
             <?php endif; ?>
         </div>

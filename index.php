@@ -1,5 +1,6 @@
 <?php
 require_once 'db.php';
+require_once 'Cours.php';
 session_start();
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
@@ -7,6 +8,8 @@ if (isset($_SESSION['role'])) {
     $role = 'visiteur';
 }
 ?>
+<?php //if($role=== 'visiteur') { 
+    ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -31,7 +34,21 @@ if (isset($_SESSION['role'])) {
         <?php
         var_dump($role);
         ?>
-
+ <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Tous Les Cours</h1>
+        <div class="grid grid-cols-3 gap-4">
+            <?php
+            
+            $cours = new Cours();
+            $cours = $cours->getAllCours();
+            foreach ($cours as $cours) {
+                echo '<div class="bg-white shadow-lg rounded-lg p-6">';
+                echo '<h2 class="text-lg font-bold text-gray-800">' . $cours['titre'] . '</h2>';
+                echo '<p class="text-gray-600">' . $cours['description'] . '</p>';
+                echo '<p class="text-gray-600">' . $cours['contenu'] . '</p>';
+                echo '</div>';
+            }
+            ?>
+        </div>
     </section>
 
 
@@ -39,3 +56,6 @@ if (isset($_SESSION['role'])) {
 </body>
 
 </html>
+<?php //}  else{
+    //echo "vous n'avez pas accès à cette page";
+//}?>

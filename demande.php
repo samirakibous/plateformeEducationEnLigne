@@ -42,4 +42,5 @@ class Demande extends Db
         $stmt->execute(['id' => $id]);
         $this->deleteDemande($id);
     }
+    
 }
