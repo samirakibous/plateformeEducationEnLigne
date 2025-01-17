@@ -17,7 +17,6 @@ class Cours extends DB
         $stmt = $this->conn->prepare($query);
         $stmt->execute(['id' => $id]);
         $resultat = $stmt->fetchAll();
-        var_dump($resultat);die();
         return $resultat;
         
 

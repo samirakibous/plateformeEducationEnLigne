@@ -30,6 +30,7 @@
                     <button type="submit" class="bg-black text-[#E3A008] px-4 py-2 rounded-lg hover:bg-gray-200 transition">Deconnexion
                     </button>
                 </form>
+                <?php elseif ($role === 'etudiant'): ?>
                 </ul>
             <?php endif; ?>
         </div>

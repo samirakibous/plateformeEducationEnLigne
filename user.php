@@ -43,14 +43,13 @@ class User extends Db
             if ($this->isFirstUser()) {
                 $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, 'Admin')";
             } else {
-                $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, 'etudiant'";
+                $insertQuery = "INSERT INTO utilisateurs (nom, password, email, role) VALUES (:nom, :password, :email, 'etudiant')";
             }
             $stmt3 = $this->conn->prepare($insertQuery);
             $stmt3->execute([
                 ':nom' => $nom,
                 ':password' => $hashed_password,
                 ':email' => $email,
-                ':role'=>$role
             ]);
             $id = $this->conn->lastInsertId();
             $_SESSION['id']=$id;

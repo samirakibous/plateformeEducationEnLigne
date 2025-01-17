@@ -76,6 +76,7 @@ CREATE TABLE demandes (
     date_demande TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE `tags` (
-  `tag_id` int NOT NULL,
-  `tag_name` varchar(50) NOT NULL
+  `tag_id` INT NOT NULL AUTO_INCREMENT,
+  `tag_name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`tag_id`)
 );
