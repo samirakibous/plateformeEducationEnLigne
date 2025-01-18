@@ -94,5 +94,18 @@ class Tag extends Db
 
         return $existingTags;
     }
+
+    public function getAllTags(){
+        $sql = "SELECT * FROM tags";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function deleteTag($id){
+        $sql = "DELETE FROM tags WHERE tag_id = :id";
+        $stmt = $this->conn->prepare($sql);
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
+    }
 }
 
