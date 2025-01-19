@@ -107,5 +107,6 @@ class Tag extends Db
         $result = $stmt->execute(['id' => $id]);
         return $result;
     }
+     
 }
 

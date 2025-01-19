@@ -2,6 +2,7 @@
 require_once 'db.php';
 require_once 'categories.php';
 require_once 'cours.php';
+require_once 'Tag.php';
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
 } else {
@@ -9,6 +10,8 @@ if (isset($_SESSION['role'])) {
 }
 $categorie = new Categorie();
 $categories = $categorie->getAllCategories();
+$tag = new Tag();
+$tags = $tag->getAllTags();
 ?>
 <?php if($role=== 'enseignant') { 
     ?>
@@ -48,7 +51,7 @@ $categories = $categorie->getAllCategories();
             ?>
         </div>
     
-    <div id="addCours" class="fixed hidden inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div id="addCours" class="fixed  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
         <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Ajouter un Livre</h1>
     <form  action="ajouter_cours.php" method="POST" enctype="multipart/form-data" class="">
@@ -68,8 +71,13 @@ $categories = $categorie->getAllCategories();
         </div>
 
         <div class="mb-4">
-            <label for="tags" class="block text-gray-700 font-bold mb-2">Tags (séparés par des virgules) :</label>
-            <input type="text" id="tags" name="tags" class="w-full border border-gray-300 rounded-md p-2" placeholder="Exemple : programmation, PHP, débutant" required>
+        <select name="tags" id="tags" multiple class="w-full p-2 border border-gray-300 rounded-lg">
+            <?php
+            foreach ($tags as $tag) {
+                echo '<option value="' . $tag['tag_id'] . '">' . htmlspecialchars($tag['tag_name']) . '</option>';
+            }
+            ?>
+        </select>
         </div>
 
         <div class="mb-4">
