@@ -27,11 +27,12 @@ CREATE TABLE IF NOT EXISTS Cours (
     title VARCHAR(255) NOT NULL,
     description TEXT,
     category_id INT NOT NULL,
-    is_published BOOLEAN DEFAULT false,
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    -- is_published BOOLEAN DEFAULT false,
+    -- status ENUM('active', 'inactive') DEFAULT 'active',
+    content_type enum('video','document') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY(teacher_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(teacher_id) REFERENCES utilisateurs(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(category_id) REFERENCES Categories(id) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -46,27 +47,15 @@ CREATE TABLE IF NOT EXISTS CourseContent (
     FOREIGN KEY(course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Enrollments (
+CREATE TABLE cours_tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    course_id INT NOT NULL,
-    status ENUM('enrolled', 'in_progress', 'completed', 'dropped') DEFAULT 'enrolled',
-    progress_percentage INT DEFAULT 0,
-    completion_date TIMESTAMP NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY(student_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS CourseTags (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    course_id INT NOT NULL,
+    cours_id INT NOT NULL,
     tag_id INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (cours_id) REFERENCES cours(cours_id),
+    FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
 );
+
 CREATE TABLE demandes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
@@ -88,4 +77,18 @@ CREATE table document_content (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY(cours_id) REFERENCES Cours(cours_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS Enrollments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    status ENUM('enrolled', 'in_progress', 'completed', 'dropped') DEFAULT 'enrolled',
+    progress_percentage INT DEFAULT 0,
+    completion_date TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY(student_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

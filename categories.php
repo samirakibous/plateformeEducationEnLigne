@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categorie_id'])) {
     $result = $categorie->deleteCategorie($categorieId);
 
 }
-
 ?>
 <!DOCTYPE html>
 <?php if($role=== 'admin') { ?>

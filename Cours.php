@@ -13,7 +13,7 @@ class Cours extends DB
     }
     public function getEnseignantCours($id)
     {
-        $query ="SELECT * FROM Cours WHERE enseignant_id = :id ORDER BY date_creation DESC";
+        $query ="SELECT * FROM Cours WHERE teacher_id = :id ORDER BY created_at DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute(['id' => $id]);
         $resultat = $stmt->fetchAll();
@@ -63,17 +63,22 @@ class Cours extends DB
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
-    public function create($title, $description, $teacherId, $categoryId){
-        $sql = "INSERT INTO cours (title, description, enseignant_id, category_id) VALUES (:title, :description, :teacherId, :categoryId)";
+    public function create($title, $description, $teacher_id, $categoryId){
+        $sql = "INSERT INTO cours (title, description, teacher_id, category_id) VALUES (:title, :description, :teacher_id, :categoryId)";
         $stmt = $this->conn->prepare($sql);
         $result = $stmt->execute([
             'title' => $title,
              'description' => $description, 
-             'teacherId' => $teacherId, 
+             'teacher_id' => $teacher_id, 
              'categoryId' => $categoryId]);
              return $result;
         }
+
+        public function getLastInsertId()
+    {
+        return $this->conn->lastInsertId();
     }
-    
+    }
+
 
 ?>
