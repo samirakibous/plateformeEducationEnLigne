@@ -35,21 +35,30 @@ $tags = $tag->getAllTags();
 
         <!---afficher les cours--->
         <div class="container mx-auto px-4 mt-8">
-            <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Mes Cours</h1>
-            <div class="grid grid-cols-3 gap-4">
-                <?php
-                $id = $_SESSION['user_id'];
-                $cours = new Cours();
-                $cours = $cours->getEnseignantCours($id);
-                foreach ($cours as $cours) {
-                    echo '<div class="bg-white shadow-lg rounded-lg p-6">';
-                    echo '<h2 class="text-lg font-bold text-gray-800">' . $cours['title'] . '</h2>';
-                    echo '<p class="text-gray-600">' . $cours['description'] . '</p>';
-                    echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">Voir le cours</a>';
-                    echo '</div>';
-                }
-                ?>
-            </div>
+    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Mes Cours</h1>
+    <div class="grid grid-cols-3 gap-4">
+        <?php
+        $id = $_SESSION['user_id'];
+        $cours = new Cours();
+        $cours = $cours->getEnseignantCours($id);
+        foreach ($cours as $cours) {
+            echo '<div class="bg-white shadow-lg rounded-lg p-6">';
+            echo '<h2 class="text-lg font-bold text-gray-800">' . htmlspecialchars($cours['title']) . '</h2>';
+            echo '<p class="text-gray-600">' . htmlspecialchars($cours['description']) . '</p>';
+            echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">Voir le cours</a>';
+            
+            // Utilisation d'un lien pour la mise à jour du cours
+            echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-left">Mettre à jour</a>';
+
+            // Bouton de suppression
+            echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition float-left ml-2">Supprimer</a>';
+
+            echo '</div>';
+        }
+        ?>
+    </div>
+</div>
+
 
             <div id="addCours" class="fixed hidden inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">

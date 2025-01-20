@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'Db.php';
 require_once 'VideoContent.php';
 require_once 'DocumentContent.php';

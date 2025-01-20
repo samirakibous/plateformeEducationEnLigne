@@ -75,30 +75,41 @@ class User extends Db
 
         return $stmt->rowCount() == 0; // Si aucun utilisateur n'existe, c'est le premier utilisateur
     }
-
     public function Login($email, $password)
-{
-    try {
-        $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = :email");
-        $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            session_start();
-
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['nom'] = $user['nom'];
-
-            header('Location: index.php');
-            exit();
-        } else {
-            return "Identifiants incorrects.";
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = :email");
+            $stmt->execute(['email' => $email]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($user && password_verify($password, $user['password'])) {
+                
+    
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['nom'] = $user['nom'];
+    
+                if ($_SESSION['role'] == 'admin') {
+                    header('Location: demandes.php');
+                    exit();
+                } else if ($_SESSION['role'] == 'enseignant') {
+                    header('Location: MesCours.php'); 
+                    exit();
+                }else if ($_SESSION['role'] == 'etudiant') {
+                    header('location :coursInscrit.php');
+                    exit();
+                }
+                 else if ($_SESSION['role'] == 'visiteur') {
+                    header('Location: index.php');
+                    exit();
+                }
+            } else {
+                return "Identifiants incorrects.";
+            }
+        } catch (PDOException $e) {
+            return "Erreur : " . $e->getMessage();
         }
-    } catch (PDOException $e) {
-        return "Erreur : " . $e->getMessage();
     }
-}
+    
 
 
     function logout(){
