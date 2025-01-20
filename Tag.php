@@ -52,7 +52,7 @@ class Tag extends Db
                         'message' => count($newTags) . " tags insérés avec succès.",
                     ];
                 } else {
-                    return [
+                    return [ 
                         'success' => false,
                         'message' => "Aucun nouveau tag à insérer.",
                     ];

@@ -1,36 +1,36 @@
 <?php
 class DocumentContent extends Content {
-    private $path;
     private $fileSize;
-    public function __construct($db, $courseId,$path,$fileSize) {
-        parent::__construct($db, $courseId);
-        $this->path = $path;
+
+    public function __construct($courseId, $path ,$fileSize) {
+        parent::__construct($courseId, $path);
         $this->fileSize = $fileSize;
     }
     public function save(){
-        $sql="INSERT INTO content (course_id, type) VALUES (?,'document')";
+        $sql="INSERT INTO content (cours_id,path, type) VALUES (?,?,'document')";
         $stmt = $this->conn->prepare($sql);
-        $result = $stmt->execute([$this->courseId]);
+        $result = $stmt->execute([$this->courseId, $this->path] );
         if($result){
             $contentId = $this->conn->lastInsertId();
-            $sql="INSERT INTO document_content (content_id, path, file_size) VALUES (?,?,?)";
+            $sql="INSERT INTO document_content (content_id,file_size ) VALUES (?,?)";
             $stmt = $this->conn->prepare($sql);
-            $result = $stmt->execute([$contentId,$this->path,$this->fileSize]);
+            $result = $stmt->execute([$contentId,$this->fileSize]);
             return $result;
         }else{
             return false;
         }
 
     }
-    public function display($courseId)
-    {
-        $sql= "SELECT title , DESCRIPTION , TYPE , document_url FROM courses
-        INNER JOIN contents ON courses.id = contents.course_id
-        INNER JOIN document_contents ON contents.id = document_contents.content_id
-        WHERE courses.id = ?";
+    public function display($coursId)
+    {	
+        $sql= "SELECT title , description , type ,file_size, path FROM cours
+        INNER JOIN content ON cours.cours_id = content.cours_id
+        INNER JOIN document_content ON content.id = document_content.content_id
+        WHERE cours.cours_id = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$courseId]);  
-        
+        $stmt->execute([$coursId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
     }
 }
 ?>

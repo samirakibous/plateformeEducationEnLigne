@@ -4,7 +4,6 @@ require_once 'VideoContent.php';
 require_once 'DocumentContent.php';
 require_once 'cours.php';
 
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouterCours') {
     // Récupération des données du formulaire
@@ -13,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $enseignantId = $_SESSION['user_id']; // ID de l'enseignant (utilisateur connecté)
     $categoryId = $_POST['categorie'];
     $contenuType = $_POST['contenu']; // "video" ou "document"
-    
     // Étape 1 : Ajouter le cours
     $cours = new Cours();
     $result = $cours->create($title, $description, $enseignantId, $categoryId);
@@ -25,11 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($contenuType === 'video') {
             // Récupérer les données spécifiques à la vidéo
             $vidUrl = $_POST['contenue']; // Chemin de la vidéo
-            $duration = $_POST['duration']; // Durée de la vidéo
-
             // Ajouter le contenu vidéo
-            $videoContent = new VideoContent($conn, $courseId, $vidUrl, $duration);
+            $videoContent = new VideoContent($courseId, $vidUrl, 82828);
             $videoResult = $videoContent->save();
+            $videoResult = $videoContent->display($courseId);
+
 
             if ($videoResult) {
                 echo "Cours et contenu vidéo ajoutés avec succès.";
@@ -39,10 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } elseif ($contenuType === 'document') {
             // Récupérer les données spécifiques au document
             $path = $_POST['contenue']; // Chemin du document
-            $fileSize = $_POST['file_size']; // Taille du document
 
             // Ajouter le contenu document
-            $documentContent = new DocumentContent($conn, $courseId, $path, $fileSize);
+            $documentContent = new DocumentContent($courseId, $path, 16739);
             $docResult = $documentContent->save();
 
             if ($docResult) {

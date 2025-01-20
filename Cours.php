@@ -27,11 +27,11 @@ class Cours extends DB
         $params = [];
     
         if (!empty($search)) {
-            $sql .= " WHERE titre LIKE :search OR description LIKE :search";
+            $sql .= " WHERE title LIKE :search OR description LIKE :search";
             $params['search'] = '%' . $search . '%';
         }
     
-        $sql .= " ORDER BY titre ASC LIMIT :limit OFFSET :offset";
+        $sql .= " ORDER BY title ASC LIMIT :limit OFFSET :offset";
         $stmt = $this->conn->prepare($sql);
     
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -50,7 +50,7 @@ class Cours extends DB
         $params = [];
     
         if (!empty($search)) {
-            $sql .= " WHERE titre LIKE :search OR description LIKE :search";
+            $sql .= " WHERE title LIKE :search OR description LIKE :search";
             $params['search'] = '%' . $search . '%';
         }
     
@@ -70,11 +70,12 @@ class Cours extends DB
             'title' => $title,
              'description' => $description, 
              'teacher_id' => $teacher_id, 
-             'categoryId' => $categoryId]);
-             return $result;
-        }
+             'categoryId' => $categoryId
+            ]);
+        return $result;
+    }
 
-        public function getLastInsertId()
+    public function getLastInsertId()
     {
         return $this->conn->lastInsertId();
     }

@@ -58,7 +58,7 @@ $totalPages = ceil($totalCours / $limit);
         <?php else: ?>
             <?php foreach ($coursList as $cours): ?>
                 <div class="bg-white shadow-lg rounded-lg p-6">
-                    <h2 class="text-lg font-bold text-gray-800"><?= htmlspecialchars($cours['titre']); ?></h2>
+                    <h2 class="text-lg font-bold text-gray-800"><?= htmlspecialchars($cours['title']); ?></h2>
                     <p class="text-gray-600"><?= htmlspecialchars($cours['description']); ?></p>
                 </div>
             <?php endforeach; ?>
