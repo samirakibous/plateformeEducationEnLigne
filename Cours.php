@@ -79,6 +79,23 @@ class Cours extends DB
     {
         return $this->conn->lastInsertId();
     }
+
+    public function getCourseDetailsById($coursId)
+    {
+        try {
+            $sql = "SELECT c.title, c.description, ct.path 
+                    FROM cours c
+                    LEFT JOIN content ct ON c.cours_id = ct.cours_id
+                    LEFT JOIN video_content v ON ct.id = v.content_id
+                    WHERE c.cours_id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$coursId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Erreur lors de la récupération des détails du cours : " . $e->getMessage();
+            return false;
+        }
+    }
     }
 
 

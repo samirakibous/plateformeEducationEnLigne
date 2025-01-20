@@ -45,7 +45,7 @@ $tags = $tag->getAllTags();
                     echo '<div class="bg-white shadow-lg rounded-lg p-6">';
                     echo '<h2 class="text-lg font-bold text-gray-800">' . $cours['title'] . '</h2>';
                     echo '<p class="text-gray-600">' . $cours['description'] . '</p>';
-                    echo '<button class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right ">Voir le cours</button>';
+                    echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">Voir le cours</a>';
                     echo '</div>';
                 }
                 ?>
