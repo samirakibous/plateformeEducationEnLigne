@@ -1,4 +1,5 @@
 <?php
+require_once('db.php');
 class Cours extends DB
 {
     public function __construct()
@@ -64,8 +65,10 @@ class Cours extends DB
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
-    public function create($title, $description, $teacher_id, $categoryId)
+    public function create($title, $description, $teacher_id, $categoryId,$tags)
     {
+        try {
+        $this->conn ->beginTransaction();
         $sql = "INSERT INTO cours (title, description, teacher_id, category_id) VALUES (:title, :description, :teacher_id, :categoryId)";
         $stmt = $this->conn->prepare($sql);
         $result = $stmt->execute([
@@ -74,17 +77,32 @@ class Cours extends DB
             'teacher_id' => $teacher_id,
             'categoryId' => $categoryId
         ]);
-        return $result;
+        $courseId = $this->conn->lastInsertId();
+        
+        $sql = "INSERT INTO cours_tags(cours_id, tag_id) VALUES (:courseId, :tagId)";
+        $stmt = $this->conn->prepare($sql);
+        foreach ($tags as $tag_id) {
+        $result = $stmt->execute([
+            "courseId"=> $courseId,
+            "tagId"=> $tag_id
+        ]);
     }
+        $this->conn->commit();
+        return $courseId;
+        } catch (PDOException $e) {
+            return false;}
+    }
+
 
     public function delete($id)
     {
 
         $sql = "
-                DELETE vc, dc
+                DELETE vc, dc, ct
                 FROM content c
                 LEFT JOIN video_content vc ON vc.content_id = c.id
                 LEFT JOIN document_content dc ON dc.content_id = c.id
+                LEFT JOIN cours_tags ct ON ct.cours_id =  c.cours_id
                 WHERE c.cours_id = :id
             ";
         $stmt = $this->conn->prepare($sql);
@@ -102,32 +120,31 @@ class Cours extends DB
 
         return $result;
     }
-    public function updateCourse($id, $courseData, $contentData) {
+    public function updateCourseAndRelatedTables($courseId, $courseData, $teacher_id, $datatype, $data) {
         try {
             // Démarrer une transaction
             $this->conn->beginTransaction();
     
-            // Mettre à jour les informations du cours
+            // Mettre à jour la table `cours`
             $sql = "
                 UPDATE cours 
                 SET 
                     title = :title, 
                     description = :description, 
                     category_id = :category_id, 
-                    content_type = :content_type, 
                     updated_at = CURRENT_TIMESTAMP
-                WHERE cours_id = :id
+                WHERE cours_id = :course_id
             ";
             $stmt = $this->conn->prepare($sql);
+            var_dump($courseData);die();
             $stmt->execute([
-                'id' => $id,
+                'course_id' => $courseId,
                 'title' => $courseData['title'],
                 'description' => $courseData['description'],
                 'category_id' => $courseData['category_id'],
-                'content_type' => $courseData['content_type'],
             ]);
     
-            // Mettre à jour les contenus dans `content`
+            // Mettre à jour la table `content`
             foreach ($contentData as $content) {
                 $sql = "
                     UPDATE content 
@@ -135,59 +152,60 @@ class Cours extends DB
                         path = :path, 
                         type = :type, 
                         updated_at = CURRENT_TIMESTAMP
-                    WHERE id = :content_id AND cours_id = :cours_id
+                    WHERE id = :content_id AND cours_id = :course_id
                 ";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute([
                     'content_id' => $content['content_id'],
-                    'cours_id' => $id,
+                    'course_id' => $courseId,
                     'path' => $content['path'],
                     'type' => $content['type'],
                 ]);
-    
-                // Mettre à jour les détails spécifiques aux vidéos
-                if ($content['type'] === 'video') {
-                    $sql = "
-                        UPDATE video_content 
-                        SET 
-                            duration = :duration, 
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE content_id = :content_id
-                    ";
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([
-                        'content_id' => $content['content_id'],
-                        'duration' => $content['duration'],
-                    ]);
-                }
-    
-                // Mettre à jour les détails spécifiques aux documents
-                if ($content['type'] === 'document') {
-                    $sql = "
-                        UPDATE document_content 
-                        SET 
-                            file_size = :file_size, 
-                            updated_at = CURRENT_TIMESTAMP
-                        WHERE content_id = :content_id
-                    ";
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->execute([
-                        'content_id' => $content['content_id'],
-                        'file_size' => $content['file_size'],
-                    ]);
-                }
             }
+    
+            if($datatype=== 'video') {
+            foreach ($data as $video) {
+                $sql = "
+                    UPDATE video_content 
+                    SET 
+                        duration = :duration, 
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE content_id = :content_id
+                ";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([
+                    'content_id' => $video['content_id'],
+                    'duration' => $video['duration'],
+                ]);
+            }}
+            else if($datatype=== 'document') {
+            foreach ($data as $document) {
+                $sql = "
+                    UPDATE document_content 
+                    SET 
+                        file_size = :file_size, 
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE content_id = :content_id
+                ";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([
+                    'content_id' => $document['content_id'],
+                    'file_size' => $document['file_size'],
+                ]);
+            }}
     
             // Valider la transaction
             $this->conn->commit();
             return true;
+    
         } catch (Exception $e) {
             // Annuler la transaction en cas d'erreur
             $this->conn->rollBack();
-            error_log("Erreur lors de la mise à jour du cours : " . $e->getMessage());
+            error_log("Erreur lors de la mise à jour : " . $e->getMessage());
             return false;
         }
     }
+    
     
     public function getLastInsertId()
     {
@@ -197,7 +215,7 @@ class Cours extends DB
     public function getCourseDetailsById($coursId)
     {
         try {
-            $sql = "SELECT c.title, c.description, ct.path 
+            $sql = "SELECT c.title, c.description, ct.path ,ct.type
                     FROM cours c
                     LEFT JOIN content ct ON c.cours_id = ct.cours_id
                     LEFT JOIN video_content v ON ct.id = v.content_id

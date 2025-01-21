@@ -7,18 +7,19 @@ require_once 'cours.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouterCours') {
-    // Récupération des données du formulaire
     $title = $_POST['titre'];
     $description = $_POST['description'];
-    $enseignantId = $_SESSION['user_id']; // ID de l'enseignant (utilisateur connecté)
+    $enseignantId = $_SESSION['user_id'];
     $categoryId = $_POST['categorie'];
-    $contenuType = $_POST['contenu']; // "video" ou "document"
+    $contenuType = $_POST['contenu'];
+    $tags = $_POST['tags'];
+
+    // var_dump($_POST);die(); // "video" ou "document"
     // Étape 1 : Ajouter le cours
     $cours = new Cours();
-    $result = $cours->create($title, $description, $enseignantId, $categoryId);
+    $courseId = $cours->create($title, $description, $enseignantId, $categoryId,$tags);
 
-    if ($result) {
-        $courseId = $cours->getLastInsertId(); // Utilisation de la méthode publique pour récupérer l'ID du cours inséré
+    if ($courseId) {
 
         // Étape 2 : Ajouter le contenu associé
         if ($contenuType === 'video') {

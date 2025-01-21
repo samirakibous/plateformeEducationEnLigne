@@ -84,15 +84,16 @@ CREATE table video_content (
     FOREIGN KEY(content_id) REFERENCES Content(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Enrollments (
+CREATE TABLE  Enrollments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     course_id INT NOT NULL,
-    status ENUM('enrolled', 'in_progress', 'completed', 'dropped') DEFAULT 'enrolled',
-    progress_percentage INT DEFAULT 0,
-    completion_date TIMESTAMP NULL,
+    status ENUM('accepted', 'panding') DEFAULT 'panding',
+    -- status ENUM('enrolled', 'in_progress', 'completed', 'dropped') DEFAULT 'enrolled',
+    -- progress_percentage INT DEFAULT 0,
+    -- completion_date TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY(student_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(course_id) REFERENCES Courses(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY(course_id) REFERENCES Courses(id) ON DELETE CASCADE
 );

@@ -47,10 +47,7 @@ $tags = $tag->getAllTags();
             echo '<p class="text-gray-600">' . htmlspecialchars($cours['description']) . '</p>';
             echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">Voir le cours</a>';
             
-            // Utilisation d'un lien pour la mise à jour du cours
             echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-left">Mettre à jour</a>';
-
-            // Bouton de suppression
             echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition float-left ml-2">Supprimer</a>';
 
             echo '</div>';
@@ -88,12 +85,14 @@ $tags = $tag->getAllTags();
 
                         <div class="mb-4">
                             <input type="text" name="contenue" class="w-full border border-gray-300 rounded-md p-2" required>
+                        </div>
 
                             <div class="mb-4">
                                 <label for="tags" class="block text-gray-700 font-bold mb-2">Tags :</label>
-                                <select name="tags" id="tags" multiple class="w-full p-2 border border-gray-300 rounded-lg">
+                                <select name="tags[]" id="tags" multiple class="w-full p-2 border border-gray-300 rounded-lg">
                                     <?php
                                     foreach ($tags as $tag) {
+                                        
                                         echo '<option value="' . htmlspecialchars($tag['tag_id']) . '">' . htmlspecialchars($tag['tag_name']) . '</option>';
                                     }
                                     ?>

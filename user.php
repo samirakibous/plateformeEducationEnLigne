@@ -95,7 +95,7 @@ class User extends Db
                     header('Location: MesCours.php'); 
                     exit();
                 }else if ($_SESSION['role'] == 'etudiant') {
-                    header('location :coursInscrit.php');
+                    header('location: coursInscrit.php');
                     exit();
                 }
                  else if ($_SESSION['role'] == 'visiteur') {

@@ -2,7 +2,7 @@
 require_once 'db.php';
 require_once 'User.php';
 require_once 'Tag.php';
-session_start();
+// session_start();
 
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
