@@ -1,7 +1,7 @@
 <?php
 require_once 'db.php';
-require_once 'cours.php';
-
+require_once 'classes/cours.php';
+session_start();
 if (isset($_GET['cours_id'])) {
     $coursId = $_GET['cours_id'];
 
@@ -27,24 +27,35 @@ if (isset($_GET['cours_id'])) {
     <title>Détails du Cours</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto px-4 mt-8">
-        <h1 class="text-3xl font-bold text-center mb-4 text-gray-800"><?= htmlspecialchars($details['title']) ?></h1>
-        <p class="text-gray-600 mb-4"><?= htmlspecialchars($details['description']) ?></p>
+<body>
+    <?php require_once 'newHeader.php'; ?>
+    <div class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
+            <?= htmlspecialchars($details['title']) ?>
+        </h1>
+
         <?php if (!empty($details['path'])): ?>
-            <div class="video-container">
-                <h2 class="text-xl font-bold text-gray-800">Vidéo du cours</h2>
-                <iframe 
-                    src="<?= htmlspecialchars($details['path']) ?>" 
-                    width="100%" 
-                    height="400" 
-                    frameborder="0" 
-                    allowfullscreen>
-                </iframe>
+            <div class="mb-6">
+                <div class="relative w-full h-0" style="padding-bottom: 56.25%; /* Ratio 16:9 */">
+                    <iframe 
+                        src="<?= htmlspecialchars($details['path']) ?>" 
+                        class="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
             </div>
         <?php else: ?>
-            <p class="text-red-500">Aucune vidéo disponible pour ce cours.</p>
+            <p class="text-red-500 text-center font-semibold mb-4">
+                Aucune vidéo disponible pour ce cours.
+            </p>
         <?php endif; ?>
+
+        <p class="text-lg text-gray-700 leading-relaxed text-justify">
+            <?= htmlspecialchars($details['description']) ?>
+        </p>
     </div>
+        </div>
 </body>
 </html>

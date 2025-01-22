@@ -1,7 +1,6 @@
 <?php
 require_once 'db.php';
-require_once 'Cours.php';
-session_start();
+require_once 'classes/Cours.php';
 
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];

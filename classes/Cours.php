@@ -1,6 +1,6 @@
 <?php
-require_once('db.php');
-class Cours extends DB
+// require_once('db.php');
+class Cours extends Db
 {
     public function __construct()
     {

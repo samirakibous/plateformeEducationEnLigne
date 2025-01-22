@@ -1,9 +1,9 @@
 <?php
-session_start();
-require_once 'Db.php';
-require_once 'VideoContent.php';
-require_once 'DocumentContent.php';
-require_once 'cours.php';
+// session_start();
+require_once 'db.php';
+require_once 'classes/VideoContent.php';
+require_once 'classes/DocumentContent.php';
+require_once 'classes/cours.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouterCours') {

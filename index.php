@@ -1,8 +1,8 @@
 <?php
 
 require_once 'db.php';
-require_once 'Cours.php';
-require_once 'inscription.php';
+require_once 'classes/Cours.php';
+require_once 'classes/inscription.php';
 session_start();
 
 if (isset($_SESSION['role'])) {
@@ -11,31 +11,31 @@ if (isset($_SESSION['role'])) {
     $role = 'visiteur';
 }
 
-// Récupération des paramètres
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$page = max(1, $page); // Toujours s'assurer que la page est au moins 1
-$limit = 6; // Nombre de cours par page
-$offset = ($page - 1) * $limit; // Calcul de l'offset
+// // Récupération des paramètres
+// $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+// $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+// $page = max(1, $page); // Toujours s'assurer que la page est au moins 1
+// $limit = 6; // Nombre de cours par page
+// $offset = ($page - 1) * $limit; // Calcul de l'offset
 
-// Initialiser la classe Cours
-$cours = new Cours();
+// // Initialiser la classe Cours
+// $cours = new Cours();
 
-// Récupérer les cours filtrés et paginés
-$coursList = $cours->getCoursWithPagination($search, $limit, $offset);
+// // Récupérer les cours filtrés et paginés
+// $coursList = $cours->getCoursWithPagination($search, $limit, $offset);
 
-// Compter le nombre total de cours correspondant à la recherche
-$totalCours = $cours->countCours($search);
-$totalPages = ceil($totalCours / $limit);
+// // Compter le nombre total de cours correspondant à la recherche
+// $totalCours = $cours->countCours($search);
+// $totalPages = ceil($totalCours / $limit);
 
-if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $coursId = $_POST['cours_id'];
-    $etudiantId = $_SESSION['user_id'];
+// if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $coursId = $_POST['cours_id'];
+//     $etudiantId = $_SESSION['user_id'];
 
-    $inscription = new Inscription();
-    $inscription->inscrire($coursId,$etudiantId);
+//     $inscription = new Inscription();
+//     $inscription->inscrire($coursId,$etudiantId);
 
-}
+// }
 ?>
 
 <!DOCTYPE html>
@@ -50,18 +50,10 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-gray-100">
     <!-- header -->
-    <?php require_once 'header.php' ?>
+    <?php require_once 'newHeader.php' ?>
     <!-- Barre de recherche -->
     <section class="container mx-auto px-4 mt-8">
-        <form method="GET" action="index.php" class="flex items-center space-x-4">
-            <input type="text" name="search" placeholder="Rechercher un cours..."
-                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                value="<?= htmlspecialchars($search); ?>">
-            <button type="submit"
-                class="bg-[#E3A008] text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
-                Rechercher
-            </button>
-        </form>
+        
 
 
         <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Tous Les Cours</h1>

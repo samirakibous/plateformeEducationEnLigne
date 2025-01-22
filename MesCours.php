@@ -1,9 +1,10 @@
 <?php
 require_once 'db.php';
 require_once 'categories.php';
-require_once 'cours.php';
-require_once 'Tag.php';
+require_once 'classes/cours.php';
+require_once 'classes/Tag.php';
 require_once 'ajouter_cours.php';
+
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
 } else {
@@ -24,38 +25,67 @@ $tags = $tag->getAllTags();
         <meta name="viewport" content="width= device-width, initial-scale=1.0">
         <title>Youdemy - Accueil</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+        
+
     </head>
-
     <body class="bg-gray-100">
-        <!-- header -->
-        <?php require_once 'header.php' ?>
+    <!-- Header -->
+    <?php require_once 'newHeader.php'; ?>
 
-        <div classs="container mx-auto px-4 mt-8"></div>
-        <button id="openForm" class="text-black p-5 rounded  float-right m-5 bg-[#E3A008]">add cours</button>
-
-        <!---afficher les cours--->
-        <div class="container mx-auto px-4 mt-8">
-    <h1 class="text-2xl font-bold text-center mb-4 text-gray-800">Mes Cours</h1>
-    <div class="grid grid-cols-3 gap-4">
-        <?php
-        $id = $_SESSION['user_id'];
-        $cours = new Cours();
-        $cours = $cours->getEnseignantCours($id);
-        foreach ($cours as $cours) {
-            echo '<div class="bg-white shadow-lg rounded-lg p-6">';
-            echo '<h2 class="text-lg font-bold text-gray-800">' . htmlspecialchars($cours['title']) . '</h2>';
-            echo '<p class="text-gray-600">' . htmlspecialchars($cours['description']) . '</p>';
-            echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">Voir le cours</a>';
-            
-            echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-left">Mettre à jour</a>';
-            echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition float-left ml-2">Supprimer</a>';
-
-            echo '</div>';
-        }
-        ?>
+    <!-- Bouton Ajouter un cours -->
+    <div class="container mx-auto px-4 mt-6 flex justify-end">
+     
     </div>
-</div>
 
+    <!-- Section des cours -->
+    <div class="container mx-auto px-4 mt-8">
+    <div class="bg-white shadow-lg rounded-lg p-8">
+        <!-- Bouton Ajouter un cours -->
+    <button id="openForm" class="bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-700 transition">
+            Ajouter un cours
+        </button>
+    <h1 class="text-4xl font-extrabold text-center mb-6 text-yellow-600   decoration-4">
+        Mes Cours
+    </h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php
+            $id = $_SESSION['user_id'];
+            $cours = new Cours();
+            $cours = $cours->getEnseignantCours($id);
+            foreach ($cours as $cours) {
+                echo '<div class="bg-white shadow-md rounded-lg overflow-hidden">';
+                
+                // Image par défaut pour chaque cours
+                echo '<img src="uploads/images/CoursPhoto.png" alt="Cours image" class="w-full h-40 object-cover">';
+
+                // Contenu du cours
+                echo '<div class="p-6">';
+                echo '<h2 class="text-xl font-bold text-gray-800 mb-2">' . htmlspecialchars($cours['title']) . '</h2>';
+                echo '<p class="text-gray-600 mb-4">' . htmlspecialchars($cours['description']) . '</p>';
+                
+                // Boutons d'action
+                echo '<div class="flex justify-between items-center">';
+                echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . 
+                '" class="text-[#E3A008] hover:text-[#c58f07] transition text-2xl"><i class="fas fa-eye"></i></a>';
+                echo '<div class="flex space-x-2">';
+                echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . 
+                '" class="text-[#E3A008] hover:text-[#c58f07] transition text-2xl"><i class="fas fa-edit"></i></a>';
+                echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" 
+                        class=" text-[#E3A008] hover:text-[#c58f07] transition text-2xl"">
+                        <i class="fas fa-trash"></i>
+                    </a>';
+                echo '</div>';
+                echo '</div>';
+
+                echo '</div>';
+                echo '</div>';
+            }
+            ?>
+        </div>
+    </div>
+    </div>
 
             <div id="addCours" class="fixed hidden inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">

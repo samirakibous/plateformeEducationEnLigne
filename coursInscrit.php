@@ -10,6 +10,6 @@
 
     <body class="bg-gray-100">
         <!-- header -->
-        <?php require_once 'header.php' ?>
+        <?php require_once 'newHeader.php' ?>
     </body>
     </html>

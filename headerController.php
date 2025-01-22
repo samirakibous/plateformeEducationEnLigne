@@ -1,6 +1,8 @@
 <?php
-require_once 'cours.php';
-require_once 'user.php';
+
+require_once 'db.php';
+require_once 'classes/cours.php';
+require_once 'classes/user.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $user = new User();
     $action = $_POST['action']; 

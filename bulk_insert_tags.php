@@ -1,6 +1,6 @@
 <?php
 require_once 'db.php'; 
-require_once 'Tag.php';
+require_once 'classes/Tag.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['tags'])) {
     // Récupérer les tags soumis

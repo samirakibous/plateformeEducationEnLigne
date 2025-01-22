@@ -1,6 +1,6 @@
 <?php
 require_once 'db.php';
-require_once 'cours.php';
+require_once 'classes/cours.php';
 
 session_start();
 

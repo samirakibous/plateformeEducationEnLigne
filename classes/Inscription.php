@@ -1,6 +1,6 @@
 <?php
 require_once 'db.php';
-class Inscription extends DB
+class Inscription extends Db
 {
     public function __construct()
     {

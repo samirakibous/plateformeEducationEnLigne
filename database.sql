@@ -84,7 +84,7 @@ CREATE table video_content (
     FOREIGN KEY(content_id) REFERENCES Content(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE  Enrollments (
+CREATE TABLE  inscriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     course_id INT NOT NULL,

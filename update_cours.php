@@ -1,8 +1,8 @@
 <?php
 require_once 'db.php';
 require_once 'categories.php';
-require_once 'Tag.php';
-require_once 'Cours.php';
+require_once 'classes/Tag.php';
+require_once 'classes/Cours.php';
 
 // session_start(); // Assurez-vous que la session est bien démarrée
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
