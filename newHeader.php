@@ -1,7 +1,10 @@
 <?php
 require_once 'db.php';
 require_once 'classes/Cours.php';
- session_start();
+if (!isset($_SESSION)){
+    session_start();
+}
+
 
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
@@ -37,7 +40,7 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
  
  <header class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-6 shadow-md">
     <div class="container mx-auto px-6 flex justify-between items-center">
-        <!-- Logo -->
+        
         <h1 class="text-3xl font-extrabold text-gray-900">Youdemy</h1>
 
         <!-- Navigation et Actions -->
@@ -46,6 +49,8 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <nav class="flex gap-x-4">
                     <a href="index.php" class="text-white font-medium hover:text-gray-200 transition">Accueil</a>
                     <a href="MesCours.php" class="text-white font-medium hover:text-gray-200 transition">Mes Cours</a>
+                    <a href="statistiques.php" class="text-white font-medium hover:text-gray-200 transition">statistiques</a>
+
                 </nav>
                 <form action="headerController.php" method="POST">
                     <input type="hidden" name="action" value="logout">

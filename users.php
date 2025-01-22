@@ -4,10 +4,10 @@ require_once 'classes/User.php';
 require_once 'classes/demande.php';
 session_start();
 if (isset($_SESSION['role'])) {
-    $role = $_SESSION['role'];
-} else {
-    $role = 'visiteur';
-}
+    $role = $_SESSION['role'];}
+// } else {
+//     $role = 'visiteur';
+// }
 $user = new User();
 $users = $user->getAllUsers();
 

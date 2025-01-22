@@ -1,10 +1,11 @@
 <?php
 require_once 'db.php';
-require_once 'categories.php';
-require_once 'classes/Tag.php';
+require_once 'classes/categorie.php';
 require_once 'classes/Cours.php';
 
 // session_start(); // Assurez-vous que la session est bien démarrée
+session_start();
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'enseignant') {
     header('Location: login.php');
     exit();
@@ -32,42 +33,37 @@ if (!$coursDetails) {
     exit();
 }
 
-// Récupérer les catégories et les tags
+
 $categorie = new Categorie();
 $categories = $categorie->getAllCategories();
-$tag = new Tag();
-$tags = $tag->getAllTags();
 
-// Si le formulaire a été soumis
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Récupérer les données soumises par l'utilisateur
-    $courseData = [
-        'title'       => $_POST['titre'] ?? '',
-        'description' => $_POST['description'] ?? '',
-        'type'        => $_POST['contenu'] ?? '',
-        'path'        => $_POST['contenue'] ?? '',
-        'category_id' => $_POST['categorie'] ?? null,
-    ];
 
-    // Récupérer les tags sélectionnés
-    $tagsSelected = $_POST['tags'] ?? [];
-    $contentData = [
-        'tags' => implode(',', $tagsSelected), // Convertir les tags en chaîne séparée par des virgules
-    ];
+    $title = $_POST['titre'] ?? null;
+    $description = $_POST['description'] ?? null;
+    $cours_id = $_POST['cours_id'] ?? null;
+    $category_id = $_POST['category_id'] ?? null;
 
-    // Validation des données
-    if (empty($courseData['title']) || empty($courseData['description'])) {
+    if ($title == null && $description == null) {
         echo "Le titre et la description sont obligatoires.";
         exit();
     }
-
     
-    $teacher_id = $_SESSION['user_id'];
-    // Mise à jour du cours
-    $success = $cours->updateCourseAndRelatedTables($cours_id, $courseData, $teacher_id, $datatype, $data);
-
+    $success = $cours->updateCoursTitle($cours_id, $title);
+    if (!$success) {
+        echo "Une erreur s'est produite lors de la mise à jour du titre du cours.";
+    } else {
+        $success = $cours->updateCoursDescription($cours_id, $description);
+        if (!$success) {
+            echo "Une erreur s'est produite lors de la mise à jour de la description du cours.";
+        } else {
+            $success = $cours->updateCoursCategoryId($cours_id, $category_id);
+        }
+    }
     if ($success) {
-        header('Location: MesCours.php'); // Redirection après succès
+        header('Location: MesCours.php');
         exit();
     } else {
         echo "Une erreur s'est produite lors de la mise à jour du cours.";
@@ -108,38 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     rows="4" required><?= htmlspecialchars($coursDetails['description']); ?></textarea>
             </div>
 
-            <div class="mb-4">
-                <label for="contenu" class="block text-gray-700 font-bold mb-2">Type de Contenu :</label>
-                <select name="contenu" id="contenu" class="w-full p-2 border border-gray-300 rounded-lg" required>
-                    <option value="video" <?= $coursDetails['type'] === 'video' ? 'selected' : ''; ?>>Vidéo</option>
-                    <option value="document" <?= $coursDetails['type'] === 'document' ? 'selected' : ''; ?>>Document</option>
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label for="contenue" class="block text-gray-700 font-bold mb-2">Chemin du Contenu :</label>
-                <input type="text" name="contenue" id="contenue" class="w-full border border-gray-300 rounded-md p-2"
-                    value="<?= htmlspecialchars($coursDetails['path']); ?>" required>
-            </div>
-
-
-            <div class="mb-4">
-                <label for="tags" class="block text-gray-700 font-bold mb-2">Tags :</label>
-                <select name="tags[]" id="tags" multiple class="w-full p-2 border border-gray-300 rounded-lg">
-                    <?php
-                    $coursTags = explode(',', $coursDetails['tags']);
-                    foreach ($tags as $tag) {
-                        $selected = in_array($tag['tag_id'], $coursTags) ? 'selected' : '';
-                        echo '<option value="' . htmlspecialchars($tag['tag_id']) . '" ' . $selected . '>'
-                            . htmlspecialchars($tag['tag_name']) . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
+    
 
             <div class="mb-4">
                 <label for="categorie" class="block text-gray-700 font-bold mb-2">Catégorie :</label>
-                <select id="categorie" name="categorie" class="w-full border border-gray-300 rounded-md p-2" required>
+                <select id="categorie" name="category_id" class="w-full border border-gray-300 rounded-md p-2" required>
                     <option value="">-- Sélectionnez une catégorie --</option>
                     <?php foreach ($categories as $categorie) : ?>
                         <option value="<?= htmlspecialchars($categorie['id']); ?>"

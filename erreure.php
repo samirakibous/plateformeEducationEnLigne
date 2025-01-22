@@ -1,5 +1,4 @@
 <?php
-require_once 'index.php';
 ?>
 <!DOCTYPE html>
 <head>
@@ -21,7 +20,7 @@ require_once 'index.php';
         <p class="mt-4 text-lg text-gray-600">
             Vous n'avez pas l'autorisation d'accéder à cette page.
         </p>
-        <a href="/" class="mt-6 inline-block px-6 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600">
+        <a href="index.php" class="mt-6 inline-block px-6 py-3 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600">
             Retour à l'accueil
         </a>
     </div>

@@ -34,7 +34,6 @@ if (isset($_GET['cours_id'])) {
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">
             <?= htmlspecialchars($details['title']) ?>
         </h1>
-
         <?php if (!empty($details['path'])): ?>
             <div class="mb-6">
                 <div class="relative w-full h-0" style="padding-bottom: 56.25%; /* Ratio 16:9 */">
@@ -51,11 +50,16 @@ if (isset($_GET['cours_id'])) {
                 Aucune vidéo disponible pour ce cours.
             </p>
         <?php endif; ?>
-
-        <p class="text-lg text-gray-700 leading-relaxed text-justify">
-            <?= htmlspecialchars($details['description']) ?>
-        </p>
-    </div>
+        <div class="text-lg text-gray-700 leading-relaxed text-justify break-words">
+            <?= nl2br(htmlspecialchars($details['description'])) ?>
         </div>
+        <div class="text-lg text-gray-700 leading-relaxed text-justify break-words">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">teacher name </h2>
+            <?= nl2br(htmlspecialchars($details['nom'])) ?>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>

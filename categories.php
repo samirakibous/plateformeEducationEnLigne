@@ -1,12 +1,16 @@
 <?php
 require_once 'db.php';
 require_once 'classes/categorie.php';
-session_start();
+if (!isset($_SESSION)){
+    session_start();
+}
+
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
 } else {
     $role = 'visiteur';
 }
+
 $categorie = new Categorie();
 $categorie->getAllCategories();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['categorie_id'])) {

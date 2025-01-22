@@ -2,7 +2,10 @@
 require_once 'db.php';
 require_once 'classes/User.php';
 require_once 'classes/Tag.php';
-session_start();
+if (!isset($_SESSION)){
+    session_start();
+}
+
 
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
@@ -95,6 +98,6 @@ if ($role === 'admin') { ?>
 </html>
 <?php
 } else {
-    echo "Vous n'avez pas accès à cette page.";
+     echo "Vous n'avez pas accès à cette page.";
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// require_once '../db.php';
+ require_once 'db.php';
 require_once 'user.php';
 class Demande extends Db
 {
@@ -8,7 +8,7 @@ class Demande extends Db
         parent::__construct();
     }
     public function demandes($role, $nom, $email, $password){
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         if($role == 'enseignant'){
             $query = "INSERT INTO demandes (nom, email, password, role) VALUES (:nom, :email, :password, :role)";
             $stmt = $this->conn->prepare($query);
@@ -37,7 +37,8 @@ class Demande extends Db
      
     public function accepterDemande($id){
         $sql = "INSERT INTO utilisateurs (nom, email, password, role)
-         SELECT nom, email, password, role FROM demandes WHERE id = :id";
+         SELECT nom, email, password, role FROM 
+          WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);
         $this->deleteDemande($id);

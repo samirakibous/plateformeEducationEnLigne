@@ -1,6 +1,6 @@
 <?php
 require_once 'db.php';
-require_once 'categories.php';
+require_once 'classes/categorie.php';
 require_once 'classes/cours.php';
 require_once 'classes/Tag.php';
 require_once 'ajouter_cours.php';
@@ -10,6 +10,9 @@ if (isset($_SESSION['role'])) {
 } else {
     $role = 'visiteur';
 }
+$categorie = new Categorie();
+$categorie->getAllCategories();
+
 $categorie = new Categorie();
 $categories = $categorie->getAllCategories();
 $tag = new Tag();
@@ -171,5 +174,5 @@ $tags = $tag->getAllTags();
 
     </html>
 <?php } else {
-    // header('location: erreure.php');
+    header('location: erreure.php');
 } ?>

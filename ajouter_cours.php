@@ -1,5 +1,8 @@
 <?php
-// session_start();
+
+if (!isset($_SESSION)){
+    session_start();
+}
 require_once 'db.php';
 require_once 'classes/VideoContent.php';
 require_once 'classes/DocumentContent.php';
@@ -56,6 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         echo "Erreur lors de l'ajout du cours.";
     }
 } else {
-    echo "Requête invalide.";
+    // echo "Requête invalide.";
 }
 ?>

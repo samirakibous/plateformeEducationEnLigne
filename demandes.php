@@ -18,7 +18,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
     $demande->accepterDemande($_POST['id']); 
 } elseif (isset($_POST['action']) && $_POST['action'] === 'refuser') {
     $demande->deleteDemande($_POST['id']); 
-}  
+}
 
 ?>
 <?php if($role=== 'admin') { ?>
@@ -84,7 +84,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
 </html>
 <?php 
 } else {
-    echo "Vous n'avez pas accès à cette page.";
+     echo "Vous n'avez pas accès à cette page.";
 } 
 ?>
 

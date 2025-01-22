@@ -4,6 +4,14 @@ class Etudiant extends User {
         parent::__construct();
     }
     
+    public function enrollInCours($etudiantId, $courseId) {
+        $ins = new Inscription();
+        $ins->inscrire($courseId, $etudiantId);
+    }
 
+    public function viewCourses($etudiantId){
+        $ins = new Cours();
+        return $ins->getCoursByEtudiant($etudiantId);
+    }
 }
 ?>

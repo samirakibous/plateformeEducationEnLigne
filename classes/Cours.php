@@ -21,6 +21,15 @@ class Cours extends Db
         $resultat = $stmt->fetchAll();
         return $resultat;
     }
+    public function getCoursByEtudiant($id){
+        $query = "SELECT cours.* FROM cours JOIN inscriptions 
+        ON cours.cours_id = inscriptions.cours_id
+        WHERE inscriptions.etudiant_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute(["id"=> $id]);
+        $resultat = $stmt->fetchAll();
+        return $resultat;
+    }
 
     public function getCoursWithPagination($search, $limit, $offset)
     {
@@ -120,91 +129,24 @@ class Cours extends Db
 
         return $result;
     }
-    public function updateCourseAndRelatedTables($courseId, $courseData, $teacher_id, $datatype, $data) {
-        try {
-            // Démarrer une transaction
-            $this->conn->beginTransaction();
-    
-            // Mettre à jour la table `cours`
-            $sql = "
-                UPDATE cours 
-                SET 
-                    title = :title, 
-                    description = :description, 
-                    category_id = :category_id, 
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE cours_id = :course_id
-            ";
-            $stmt = $this->conn->prepare($sql);
-            var_dump($courseData);die();
-            $stmt->execute([
-                'course_id' => $courseId,
-                'title' => $courseData['title'],
-                'description' => $courseData['description'],
-                'category_id' => $courseData['category_id'],
-            ]);
-    
-            // Mettre à jour la table `content`
-            foreach ($contentData as $content) {
-                $sql = "
-                    UPDATE content 
-                    SET 
-                        path = :path, 
-                        type = :type, 
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE id = :content_id AND cours_id = :course_id
-                ";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([
-                    'content_id' => $content['content_id'],
-                    'course_id' => $courseId,
-                    'path' => $content['path'],
-                    'type' => $content['type'],
-                ]);
-            }
-    
-            if($datatype=== 'video') {
-            foreach ($data as $video) {
-                $sql = "
-                    UPDATE video_content 
-                    SET 
-                        duration = :duration, 
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE content_id = :content_id
-                ";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([
-                    'content_id' => $video['content_id'],
-                    'duration' => $video['duration'],
-                ]);
-            }}
-            else if($datatype=== 'document') {
-            foreach ($data as $document) {
-                $sql = "
-                    UPDATE document_content 
-                    SET 
-                        file_size = :file_size, 
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE content_id = :content_id
-                ";
-                $stmt = $this->conn->prepare($sql);
-                $stmt->execute([
-                    'content_id' => $document['content_id'],
-                    'file_size' => $document['file_size'],
-                ]);
-            }}
-    
-            // Valider la transaction
-            $this->conn->commit();
-            return true;
-    
-        } catch (Exception $e) {
-            // Annuler la transaction en cas d'erreur
-            $this->conn->rollBack();
-            error_log("Erreur lors de la mise à jour : " . $e->getMessage());
-            return false;
-        }
+    public function updateCoursTitle($courseId, $title){
+        $sql = 'UPDATE cours SET title = :title WHERE cours_id = :courseId';
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':courseId'=> $courseId,':title'=> $title]);
     }
+    
+    public function updateCoursDescription($courseId, $description){
+        $sql = 'UPDATE cours SET description = :description WHERE cours_id = :courseId';
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':courseId'=> $courseId,':description'=> $description]);
+    }
+
+    public function updateCoursCategoryId($courseId, $categoryId){
+        $sql = 'UPDATE cours SET category_id = :categoryId WHERE cours_id = :courseId';
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':courseId'=> $courseId, ':categoryId'=> $categoryId]);
+    }
+
     
     
     public function getLastInsertId()
@@ -215,17 +157,51 @@ class Cours extends Db
     public function getCourseDetailsById($coursId)
     {
         try {
-            $sql = "SELECT c.title, c.description, ct.path ,ct.type
+            $sql = "SELECT c.title, c.description, ct.path ,ct.type ,u.nom 
+
                     FROM cours c
                     LEFT JOIN content ct ON c.cours_id = ct.cours_id
                     LEFT JOIN video_content v ON ct.id = v.content_id
+                    LEFT JOIN document_content d ON ct.id = d.content_id
+                    LEFT JOIN utilisateurs u ON c.teacher_id = u.id
+                    LEFT JOIN categories cat ON c.category_id = cat.id
                     WHERE c.cours_id = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([$coursId]);
+            
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Erreur lors de la récupération des détails du cours : " . $e->getMessage();
             return false;
         }
     }
+    public function getTotalCoursesNumber()
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT COUNT(*) AS total_courses FROM courses");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['total_courses'];
+        } catch (PDOException $e) {
+            error_log("Error getting total courses: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function getTopCoursesByEnrollment()
+    {
+        try {
+            $stmt = $this->conn->prepare("SELECT co.title, COUNT(*) AS student_number
+                                          FROM enrollments en
+                                          JOIN courses co ON co.course_id = en.course_id
+                                          GROUP BY en.course_id
+                                          ORDER BY student_number DESC
+                                          LIMIT 3");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Returns top 3 courses with the highest number of enrollments
+        } catch (PDOException $e) {
+            error_log("Error getting top courses by enrollment: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

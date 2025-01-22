@@ -11,31 +11,32 @@ if (isset($_SESSION['role'])) {
     $role = 'visiteur';
 }
 
-// // Récupération des paramètres
-// $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-// $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-// $page = max(1, $page); // Toujours s'assurer que la page est au moins 1
-// $limit = 6; // Nombre de cours par page
-// $offset = ($page - 1) * $limit; // Calcul de l'offset
+// Récupération des paramètres
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = max(1, $page); // Toujours s'assurer que la page est au moins 1
+$limit = 6; // Nombre de cours par page
+$offset = ($page - 1) * $limit; // Calcul de l'offset
 
-// // Initialiser la classe Cours
-// $cours = new Cours();
+// Initialiser la classe Cours
+$cours = new Cours();
 
-// // Récupérer les cours filtrés et paginés
-// $coursList = $cours->getCoursWithPagination($search, $limit, $offset);
+// Récupérer les cours filtrés et paginés
+$coursList = $cours->getCoursWithPagination($search, $limit, $offset);
 
-// // Compter le nombre total de cours correspondant à la recherche
-// $totalCours = $cours->countCours($search);
-// $totalPages = ceil($totalCours / $limit);
+// Compter le nombre total de cours correspondant à la recherche
+$totalCours = $cours->countCours($search);
+$totalPages = ceil($totalCours / $limit);
 
-// if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $coursId = $_POST['cours_id'];
-//     $etudiantId = $_SESSION['user_id'];
+if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $coursId = $_POST['cours_id'];
+    $etudiantId = $_SESSION['user_id'];
 
-//     $inscription = new Inscription();
-//     $inscription->inscrire($coursId,$etudiantId);
+    $inscription = new Inscription();
+    $inscription->inscrire($coursId,$etudiantId);
+   
 
-// }
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,10 +67,14 @@ if (isset($_SESSION['role'])) {
                         <h2 class="text-lg font-bold text-gray-800"><?= htmlspecialchars($cours['title']); ?></h2>
                         <p class="text-gray-600"><?= htmlspecialchars($cours['description']); ?></p>
 
-                        <?php if ($role == 'etudiant'): ?>
-                            <?php if($inscription) ?>
-                               <p class="text-gray-600">Vous avez deja inscrit ce cours</p>;
-                            
+                    <?php if ($role == 'etudiant'): ?>
+                        <?php 
+                        $ins = new Inscription();
+                            $etudiantId = $_SESSION['user_id'];
+                        ?>
+                        <?php if($ins->getEnrolementByEtudianteEtCours($etudiantId ,$cours['cours_id'])): ?>
+                            <p class="text-gray-600">Vous avez deja inscrit ce cours</p>
+                        <?php else: ?>
                         
                         <form action="index.php" method="POST" > 
 
@@ -79,11 +84,14 @@ if (isset($_SESSION['role'])) {
                             </button>
                         
                         </form>
+                        <?php endif; ?>
+
+                    <?php endif; ?>
                             <a href="details_cours.php?cours_id=<?= htmlspecialchars($cours['cours_id']); ?>" 
                             class="bg-[#E3A008] text-white px-6 py-2 rounded-lg hover:bg-[#c58f07] transition float-right">
                             Voir le cours
                             </a>
-                        <?php endif; ?>
+                        
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -113,7 +121,3 @@ if (isset($_SESSION['role'])) {
 </body>
 
 </html>
-<?php //}  else{
-//echo "vous n'avez pas accès à cette page";
-//}
-?>

@@ -1,7 +1,8 @@
 <?php
+session_start();
 require_once 'db.php';
 require_once 'classes/user.php';
-session_start();
+
 
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
