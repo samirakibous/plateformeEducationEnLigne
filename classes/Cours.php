@@ -178,7 +178,7 @@ class Cours extends Db
     public function getTotalCoursesNumber()
     {
         try {
-            $stmt = $this->conn->prepare("SELECT COUNT(*) AS total_courses FROM courses");
+            $stmt = $this->conn->prepare("SELECT COUNT(*) AS total_courses FROM cours");
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result['total_courses'];
@@ -191,13 +191,14 @@ class Cours extends Db
     {
         try {
             $stmt = $this->conn->prepare("SELECT co.title, COUNT(*) AS student_number
-                                          FROM enrollments en
-                                          JOIN courses co ON co.course_id = en.course_id
-                                          GROUP BY en.course_id
+                                          FROM inscriptions en
+                                          JOIN cours co ON co.cours_id = en.cours_id
+                                          GROUP BY en.cours_id
                                           ORDER BY student_number DESC
                                           LIMIT 3");
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Returns top 3 courses with the highest number of enrollments
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result;
         } catch (PDOException $e) {
             error_log("Error getting top courses by enrollment: " . $e->getMessage());
             return false;

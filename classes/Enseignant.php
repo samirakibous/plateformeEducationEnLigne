@@ -8,15 +8,15 @@ class Enseignant extends User {
     public function getTopTeachersByEnrollment()
     {
         try {
-            $stmt = $this->conn->prepare("SELECT u.full_name, COUNT(*) AS student_number
-                                        FROM enrollments en
-                                        JOIN courses co ON co.course_id = en.course_id
-                                        JOIN users u ON u.user_id = co.teacher_id
-                                        GROUP BY u.user_id
+            $stmt = $this->conn->prepare("SELECT u.nom, COUNT(*) AS student_number
+                                        FROM inscriptions en
+                                        JOIN cours co ON co.cours_id = en.cours_id
+                                        JOIN utilisateurs u ON u.id = co.teacher_id
+                                        GROUP BY u.id
                                         ORDER BY student_number DESC
                                         LIMIT 3;");
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Returns the top 3 teachers with their courses and the number of enrollments
+            return $stmt->fetch (PDO::FETCH_ASSOC); // Returns the top 3 teachers with their courses and the number of enrollments
         } catch (PDOException $e) {
             error_log("Error getting top teachers by enrollment: " . $e->getMessage());
             return false;

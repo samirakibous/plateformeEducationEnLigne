@@ -90,8 +90,8 @@ class User extends Db
             echo'<br>';
             var_dump(password_verify($password, $user['password']));
             echo'<br>';
-            var_dump(password_verify($password, $t));
-            die;
+            // var_dump(password_verify($password, $t));
+            // die;
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['status'] !== 'active') {
                     header('location: erreure.php');
