@@ -60,10 +60,14 @@ $enseignantTop = $enseignant->getTopTeachersByEnrollment();
     </div>
     <div class="bg-white shadow-lg rounded-lg p-8">
         <h2 class="text-2xl font-bold mb-4 text-gray-800">top 3 des enseignants</h2>
-        <?php foreach($enseignantTop) {
+        <?php foreach($enseignantTop as $Enseignant ): ?>
         <p class="text-lg text-gray-700 leading-relaxed text-justify break-words">
-            Nombre de cours : <?= htmlspecialchars($enseignantTop) ?>
+            Nom de professeur : <?= htmlspecialchars($Enseignant['nom']) ?>
         </p>
+        <p class="text-lg text-gray-700 leading-relaxed text-justify break-words">
+            Nombre d'etudiants : <?= htmlspecialchars($Enseignant['student_number']) ?>
+        </p>
+        <?php endforeach ?>
     </div>
     </div>  
             
