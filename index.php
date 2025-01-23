@@ -2,7 +2,7 @@
 
 require_once 'db.php';
 require_once 'classes/Cours.php';
-require_once 'classes/inscription.php';
+require_once 'classes/Inscription.php';
 session_start();
 
 if (isset($_SESSION['role'])) {
