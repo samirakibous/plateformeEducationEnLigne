@@ -11,20 +11,17 @@ if (isset($_SESSION['role'])) {
 } else {
     $role = 'visiteur';
 }
-// Récupération des paramètres
+
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$page = max(1, $page); // Toujours s'assurer que la page est au moins 1
-$limit = 6; // Nombre de cours par page
-$offset = ($page - 1) * $limit; // Calcul de l'offset
+$page = max(1, $page); //s'assurer que la page est au moins 1
+$limit = 6; 
+$offset = ($page - 1) * $limit;
 
-// Initialiser la classe Cours
 $cours = new Cours();
 
-// Récupérer les cours filtrés et paginés
 $coursList = $cours->getCoursWithPagination($search, $limit, $offset);
 
-// Compter le nombre total de cours correspondant à la recherche
 $totalCours = $cours->countCours($search);
 $totalPages = ceil($totalCours / $limit);
 
@@ -43,7 +40,6 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <h1 class="text-3xl font-extrabold text-gray-900">Youdemy</h1>
 
-        <!-- Navigation et Actions -->
         <div class="flex items-center space-x-6">
             <?php if ($role === 'enseignant'): ?>
                 <nav class="flex gap-x-4">
@@ -76,6 +72,7 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     <a href="users.php" class="text-white font-medium hover:text-gray-200 transition">Utilisateurs</a>
                     <a href="categories.php" class="text-white font-medium hover:text-gray-200 transition">Catégories</a>
                     <a href="tags.php" class="text-white font-medium hover:text-gray-200 transition">Tags</a>
+                    <a href="statistiquesAdmin.php" class="text-white font-medium hover:text-gray-200 transition">statistiques</a>
                 </nav>
                 <form action="headerController.php" method="POST">
                     <input type="hidden" name="action" value="logout">
@@ -98,7 +95,6 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             <?php endif; ?>
 
-            <!-- Barre de recherche -->
             <form method="GET" action="index.php" class="flex items-center space-x-3 bg-white p-2 rounded-lg shadow-sm">
                 <input type="text" name="search" placeholder="Rechercher un cours..."
                     class="p-2 w-48 text-gray-800 rounded-md focus:outline-none focus:ring focus:ring-yellow-300"

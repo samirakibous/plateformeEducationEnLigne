@@ -1,5 +1,5 @@
 <?php
- require_once 'db.php';
+require_once(__DIR__ . '/../db.php');
 require_once 'user.php';
 class Demande extends Db
 {
@@ -37,7 +37,7 @@ class Demande extends Db
      
     public function accepterDemande($id){
         $sql = "INSERT INTO utilisateurs (nom, email, password, role)
-         SELECT nom, email, password, role FROM 
+         SELECT nom, email, password, role FROM demandes
           WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $id]);

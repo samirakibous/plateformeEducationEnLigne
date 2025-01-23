@@ -157,7 +157,7 @@ class Cours extends Db
     public function getCourseDetailsById($coursId)
     {
         try {
-            $sql = "SELECT c.title, c.description, ct.path ,ct.type ,u.nom 
+            $sql = "SELECT c.title, c.description, ct.path ,ct.type ,u.nom, cat.name as categoryName , ts.tag_name as coursTag
 
                     FROM cours c
                     LEFT JOIN content ct ON c.cours_id = ct.cours_id
@@ -165,6 +165,8 @@ class Cours extends Db
                     LEFT JOIN document_content d ON ct.id = d.content_id
                     LEFT JOIN utilisateurs u ON c.teacher_id = u.id
                     LEFT JOIN categories cat ON c.category_id = cat.id
+                    LEFT JOIN cours_tags cts ON c.cours_id = cts.cours_id
+                    LEFT JOIN tags ts ON cts.tag_id = ts.tag_id
                     WHERE c.cours_id = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([$coursId]);

@@ -1,7 +1,7 @@
 <?php
 require_once 'db.php';
 require_once 'classes/categorie.php';
-require_once 'classes/cours.php';
+require_once 'classes/Cours.php';
 require_once 'classes/Tag.php';
 require_once 'ajouter_cours.php';
 
@@ -30,7 +30,7 @@ $tags = $tag->getAllTags();
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-        
+
 
     </head>
     <body class="bg-gray-100">
@@ -39,7 +39,7 @@ $tags = $tag->getAllTags();
 
     <!-- Bouton Ajouter un cours -->
     <div class="container mx-auto px-4 mt-6 flex justify-end">
-     
+
     </div>
 
     <!-- Section des cours -->
@@ -59,7 +59,7 @@ $tags = $tag->getAllTags();
             $cours = $cours->getEnseignantCours($id);
             foreach ($cours as $cours) {
                 echo '<div class="bg-white shadow-md rounded-lg overflow-hidden">';
-                
+
                 // Image par défaut pour chaque cours
                 echo '<img src="uploads/images/CoursPhoto.png" alt="Cours image" class="w-full h-40 object-cover">';
 
@@ -67,15 +67,15 @@ $tags = $tag->getAllTags();
                 echo '<div class="p-6">';
                 echo '<h2 class="text-xl font-bold text-gray-800 mb-2">' . htmlspecialchars($cours['title']) . '</h2>';
                 echo '<p class="text-gray-600 mb-4">' . htmlspecialchars($cours['description']) . '</p>';
-                
+
                 // Boutons d'action
                 echo '<div class="flex justify-between items-center">';
-                echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . 
+                echo '<a href="details_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) .
                 '" class="text-[#E3A008] hover:text-[#c58f07] transition text-2xl"><i class="fas fa-eye"></i></a>';
                 echo '<div class="flex space-x-2">';
-                echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . 
+                echo '<a href="update_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) .
                 '" class="text-[#E3A008] hover:text-[#c58f07] transition text-2xl"><i class="fas fa-edit"></i></a>';
-                echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '" 
+                echo '<a href="delete_cours.php?cours_id=' . htmlspecialchars($cours['cours_id']) . '"
                         class=" text-[#E3A008] hover:text-[#c58f07] transition text-2xl"">
                         <i class="fas fa-trash"></i>
                     </a>';
@@ -125,7 +125,7 @@ $tags = $tag->getAllTags();
                                 <select name="tags[]" id="tags" multiple class="w-full p-2 border border-gray-300 rounded-lg">
                                     <?php
                                     foreach ($tags as $tag) {
-                                        
+
                                         echo '<option value="' . htmlspecialchars($tag['tag_id']) . '">' . htmlspecialchars($tag['tag_name']) . '</option>';
                                     }
                                     ?>

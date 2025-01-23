@@ -1,6 +1,6 @@
 <?php
 require_once 'db.php';
-require_once 'classes/User.php';
+require_once 'classes/user.php';
 require_once 'classes/Tag.php';
 if (!isset($_SESSION)){
     session_start();

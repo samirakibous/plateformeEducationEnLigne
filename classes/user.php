@@ -19,7 +19,7 @@ class User extends Db
             $_SESSION['email_exist'] = "L'adresse email existe déjà!";
             return false;
         } else {
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             if ($role === 'enseignant') {
                 $sql = 'SELECT * FROM demandes WHERE email = :email';
                 $stmt = $this->conn->prepare($sql);
@@ -30,9 +30,9 @@ class User extends Db
                     return false;
                 };
 
-                $demande = new Demande();  // Instanciation de la classe Demande
+                $demande = new Demande();
 
-                if ($demande->demandes($role, $nom, $email, $hashed_password)) {
+                if ($demande->demandes($role, $nom, $email, $password)) {
                     $_SESSION['success'] = "Votre demande a été envoyée pour validation.";
                     return true;
                 } else {
@@ -81,23 +81,12 @@ class User extends Db
             $stmt = $this->conn->prepare("SELECT * FROM utilisateurs WHERE email = :email");
             $stmt->execute(['email' => $email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            var_dump($user['password']);
-            echo'<br>';
-            var_dump($password);
-            echo'<br>';
-            $t = password_hash($password, PASSWORD_DEFAULT) ;
-            var_dump($t);
-            echo'<br>';
-            var_dump(password_verify($password, $user['password']));
-            echo'<br>';
-            // var_dump(password_verify($password, $t));
-            // die;
             if ($user && password_verify($password, $user['password'])) {
                 if ($user['status'] !== 'active') {
                     header('location: erreure.php');
                     exit();
-                }            
-             
+                }
+
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['nom'] = $user['nom'];

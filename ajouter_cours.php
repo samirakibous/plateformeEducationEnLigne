@@ -6,7 +6,7 @@ if (!isset($_SESSION)){
 require_once 'db.php';
 require_once 'classes/VideoContent.php';
 require_once 'classes/DocumentContent.php';
-require_once 'classes/cours.php';
+require_once 'classes/Cours.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'ajouterCours') {

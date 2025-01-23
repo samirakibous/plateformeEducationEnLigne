@@ -16,11 +16,12 @@ class Enseignant extends User {
                                         ORDER BY student_number DESC
                                         LIMIT 3;");
             $stmt->execute();
-            return $stmt->fetch (PDO::FETCH_ASSOC); // Returns the top 3 teachers with their courses and the number of enrollments
+            return $stmt->fetchAll (PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error getting top teachers by enrollment: " . $e->getMessage());
             return false;
         }
+
     }
     
 public function getTeacherCourseCount($teacher_id)

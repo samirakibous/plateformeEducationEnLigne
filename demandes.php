@@ -1,23 +1,23 @@
 <?php
 require_once 'db.php';
-require_once 'classes/User.php';
+require_once 'classes/user.php';
 require_once 'classes/demande.php';
 
 require_once 'classes/Cours.php';
-require_once 'classes/inscription.php';
+require_once 'classes/Inscription.php';
 session_start();
 if (isset($_SESSION['role'])) {
     $role = $_SESSION['role'];
 } else {
     $role = 'visiteur';
-}   
+}
 $demande = new Demande();
 $demandes = $demande->getDemandes();
 
 if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
-    $demande->accepterDemande($_POST['id']); 
+    $demande->accepterDemande($_POST['id']);
 } elseif (isset($_POST['action']) && $_POST['action'] === 'refuser') {
-    $demande->deleteDemande($_POST['id']); 
+    $demande->deleteDemande($_POST['id']);
 }
 
 ?>
@@ -32,9 +32,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">    
+<body class="bg-gray-100">
     <?php require_once 'newHeader.php' ?>
-    
+
     <section class="container mx-auto px-4 mt-8">
     <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Demandes</h1>
     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -82,10 +82,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'accepter') {
 
 </body>
 </html>
-<?php 
+<?php
 } else {
      echo "Vous n'avez pas accès à cette page.";
-} 
+}
 ?>
-
- 

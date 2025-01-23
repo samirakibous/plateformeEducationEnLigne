@@ -3,7 +3,7 @@ session_start();
 
 require 'db.php';
 
-require_once 'classes/User.php';
+require_once 'classes/user.php';
 
 $message = '';
 if (isset($_POST['register'])) {
