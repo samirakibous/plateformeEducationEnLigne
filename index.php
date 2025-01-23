@@ -64,9 +64,11 @@ if (isset($_POST['inscrire']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php else: ?>
                 <?php foreach ($coursList as $cours): ?>
                     <div class="bg-white shadow-lg rounded-lg p-6">
+                        <img src="uploads/images/CoursPhoto.png" alt="Cours image" class="w-full h-40 object-cover">
                         <h2 class="text-lg font-bold text-gray-800"><?= htmlspecialchars($cours['title']); ?></h2>
-                        <p class="text-gray-600"><?= htmlspecialchars($cours['description']); ?></p>
-
+                        <p class="text-gray-600 truncate" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    <?= htmlspecialchars($cours['description']); ?>
+                </p>
                     <?php if ($role == 'etudiant'): ?>
                         <?php 
                         $ins = new Inscription();

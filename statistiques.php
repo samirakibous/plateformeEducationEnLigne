@@ -21,7 +21,6 @@ $coursMostEnroulement = $cours->getTopCoursesByEnrollment();
 
 $enseignant = new Enseignant();
 $enseignantTop = $enseignant->getTopTeachersByEnrollment();
-var_dump($enseignantTop);die();
 ?>
 <?php if($role=== 'enseignant') { ?>
 <!DOCTYPE html>
